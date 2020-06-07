@@ -50,15 +50,7 @@ app.post('/login', function(req, res) {
         }
     })
         .then(user1=>{
-            if(user1 != null) {
-                if (bcrypt.compareSync(req.body.senha, user1.senha_user)) {
-                    res.redirect('/');
-                } else {
-                    res.send('Usuário não existe!');
-                }
-            } else {
-                res.send('Usuário não existe!');
-            }
+            req.send(user1.email_user);
         })
 
         .catch(err=>{
