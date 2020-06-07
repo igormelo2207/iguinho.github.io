@@ -46,7 +46,7 @@ app.get('/login', function(req, res) {
 app.post('/login', function(req, res) {
     user.findOne({
         where: {
-            user_name: req.body.email
+            email_user: req.body.email
         }
     })
         .then(user1=>{
@@ -74,7 +74,7 @@ app.post('/cadastrar', async (req, res) => {
     try {
         user.findOne({
             where: {
-                user_name: req.body.email
+                email_user: req.body.email
             }
         })
 
@@ -83,15 +83,16 @@ app.post('/cadastrar', async (req, res) => {
                     var senha = await bcrypt.hash(req.body.senha, 10);
 
                     user.create({
-                        user_name: req.body.email,
-                        user_password: senha
+                        nome_user: req.body.nome,
+                        email_user: req.body.email,
+                        senha_user: senha
                     }).then(()=>{
                         res.redirect('/login');
                     })
                     .catch((err)=>{
                         res.send('Erro: ' + err + "<br><br>" + "Wait to be redirected!");
-                        setTimeout(()=>{
-                            res.redirect('/cadastrar');
+                        setTimeout((err)=>{
+                            res.send(err);
                         },5000);
                     });
                 } else {
@@ -101,9 +102,7 @@ app.post('/cadastrar', async (req, res) => {
             })
 
             .catch(err => {
-                setTimeout(()=>{
-                    res.redirect('/cadastrar');
-                },5000);
+                res.send(err);
             });
     } catch (error) {
         setTimeout(()=>{

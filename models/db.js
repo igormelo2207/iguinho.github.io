@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('id13974850_ilion','id13974850_users','QAG0BlgnZ_Of{}6!',{
-    host: 'localhost',
+const sequelize = new Sequelize('informations','ilionroot','marina2207',{
+    host: 'mysql669.umbler.com',
+    port: 41890,
     dialect: 'mysql',
 
     pool: {
