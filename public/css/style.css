@@ -1,178 +1,234 @@
-.topPanel {
-    position: fixed;
-    background-color: snow;
-    width: 100%;
-    height: 40px;
-    top: 0;
-    left: 0;
-    float: top;
+body {
+    background-color: rgb(235,235,235);
 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.top {
     display: flex;
-    align-items: center;
+    position:fixed;
+
+    align-items: center; /* Alinha verticalmente */
+    justify-content: left;
     flex-direction: row;
-    justify-content: space-around;
-}
 
-.topPanel a {
-    text-decoration: none;
-    border: none;
-    color: black;
-    align-items: center;
-}
+    width: 100%;
+    height: 45px;
 
-.topPanel div {
-    transition: .1s ease;
-}
-
-.topPanel div:hover {
-    transform: scale(1.07);
-}
-
-#registrar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    background-color: snow;
+    background-color: lightgray;
 
     top: 0;
     left: 0;
 
-    height: 350px;
-    width: 325px;
+    z-index: 2;
+}
 
+.top img {
+    margin-left: 15px;
+}
+
+#cadastrarForm {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: white;
+
+    border: lightgray solid 1px;
     border-radius: 20px;
+
+    width: 50%;
+    height: 70%;
 }
 
-#registrar input {
-    margin-bottom: 15px;
+#cadastrarForm input[type=submit] {
+    width: 72%;
+    height: 35px;
+
+    border-radius: 10px;
     border: none;
-    background-color: lightgray;
+
+    outline: none;
+    transition: .1s ease;
+}
+
+#cadastrarForm input[type=submit]:hover {
+    -moz-transform: scale(1.03);
+    -o-transform: scale(1.03);
+    -webkit-transform: scale(1.03);
+    transform: scale(1.03);
+
+    background-color: lightseagreen;
+}
+
+#cadastrarForm input:not([type=submit]) {
+    width: 67.5%;
+
+    border: none;
+    border-radius: 3px;
+
+    outline: none;
+    padding-left: 10px;
+    padding-bottom: 10px;
+
+    border-bottom: gray solid 1px;
+}
+
+#cadastrarForm textarea {
+    padding:10px;
+}
+
+#cadastrarDiv {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    background-color: snow;
+}
+
+.top ul li {
+    list-style: none;
+    display: inline;
+
+    margin-left: 45px;
+}
+
+.top ul li a {
+    text-decoration: none;
     color: rgb(85,85,85);
-    outline: none;
-    padding: 10px;
-    border-radius: 10px;
-
-    width: 200px;
 }
 
-#registrar input[type=submit] {
-    border: none;
+.top ul li a:hover {
     color: black;
-    border-radius: 10px;
-    height: 40px;
-    margin: 0;
-
-    transition: .1s ease;
 }
 
-#registrar input:not([type=submit]) {
-    background-color: transparent;
+.menu {
+    display: none;
+    position: fixed;
 
-    padding-left: 0;
-    border-radius: 0px;
-    border-bottom: gray solid 1px;
+    top: 1.75%;
+    right: 3%;
+
+    cursor: pointer;
+
+    z-index: 101;
 }
 
-#registrar input[type=submit]:hover {
-    background-color: rgb(185,185,185);
-    width: 200px;
-
-    -moz-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
+.efeito .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    -o-transform: rotate(-45deg) translate(-9px, 6px);
+    -moz-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+    background-color: black;
 }
 
-#register {
-    background-color: gray;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.efeito .bar2 {
+    opacity: 0;
+    background-color: black;
 }
 
-html,body{
-    width: 100%;
-    height: 100%;
+.efeito .bar3 {
+    -webkit-transform: rotate(45deg) translate(-4px, -3px);
+    -o-transform: rotate(45deg) translate(-4px, -3px);
+    -moz-transform: rotate(45deg) translate(-4px, -3px);
+    transform: rotate(45deg) translate(-4px, -3px);
+    background-color: black;
 }
 
-.central {
-    display: flex;
-    flex-direction: column;
-    
-    height: 325px;
-    width: 350px;
-    
-    justify-content: center;
-    align-items: center;
+.bar1,.bar2,.bar3 {
+    height: 5px;
+    width: 30px;
 
-    background-color: lightgray;
+    margin-bottom: 3px;
 
-    border-radius: 15px;
+    background-color: black;
+
+    transition: .3s ease-in-out;
 }
 
-.central label {
-    margin-bottom: 5px;
-    font-size: 25px;
-
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.central input {
-    margin-bottom: 15px;
-    width: 200px;
-
-    border: none;
-    padding: 10px;
-
-    background-color: transparent;
-
-    border-bottom: gray solid 1px;
-
-    outline: none;
-
-    transition: .2s ease;
-}
-
-.central input:focus {
-    border-bottom: lightskyblue solid 1px;
-}
-
-.central button {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-top: 30px;
-    width: 223px;
-    height: 50px;
-
-    border: none;
-    border-radius: 10px;
-
-    transition: .1s ease;
-}
-
-.central button:hover {
-    background-color: grey;
-}
-
-.back {
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
-    align-items: center;
-
-    background-image: url("../img/bg3.jpg");
-    background-position: center;
-    background-size: cover;
-    background-repeat: repeat;
-
-    height: 100%;
-    width: 100%;
+.lat {
+    z-index: 100;
 
     position: fixed;
-    top:0;
-    left:0;
+    float: right;
+    top: 0;
+    right: 0;
+
+    background-color: snow;
+
+    width: 0;
+    height: 100vh;
+
+    transition: .4s ease-in-out;
+}
+
+.lat ul li {
+    list-style: none;
+    margin-top: 80px;
+}
+
+.lat ul li a{
+    text-decoration: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    color: rgb(85,85,85);
+    transition: .1s ease;
+}
+
+.lat ul li a:hover {
+    color: black;
+}
+
+.crescer {
+    width: 150px;
+}
+
+#tudo {
+    z-index: 1;
+}
+
+.escurecer {
+    z-index: -1;
+    background-color: black;
+    opacity: 0;
+    
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    transition: .3s;
+}
+
+.escurecer1 {
+    z-index: 99;
+    opacity: 0.65;
+}
+
+@media only screen and (max-width: 768px) {
+    .op {
+        display: none;
+    }
+
+    .menu {
+        display: block;
+    }
+
+    .top {
+        justify-content: space-between;
+    }
 }

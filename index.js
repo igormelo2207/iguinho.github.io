@@ -1,118 +1,163 @@
 const express = require('express');
 const app = express();
+const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
-const user = require('./models/user');
+const Post = require('./models/Post');
+const User = require('./models/Usuario');
 const bcrypt = require('bcrypt');
+const path = require('path');
+
 const session = require('express-session');
 const flash = require('connect-flash');
 
-//Configurações
-
-var port = process.env.PORT || 3000;
-
-//Sessão
-app.use(session({
-    secret: "cursodenode",
-    resave: true,
-    saveUninitialized: true
-}));
-app.use(flash());
-
-//Middleware
-
-app.use((req, res, next)=>{
-    res.locals.success_msg = req.flash("success_msg");
-    res.locals.error_msg = req.flash("error_msg");
-    next();
-});
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.static(__dirname + "/public/"));
-
-//Rotas
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-});
-
-app.post('/', (req, res) => {
-});
-
-app.get('/login', function(req, res) {
-    res.sendFile(__dirname + "/public/pages/login.html");
-});
-
-app.post('/login', function(req, res) {
-    user.findOne({
-        where: {
-            email_user: req.body.email
-        }
-    })
-        .then(user1=>{
-            if(user1 != null) {
-                if (bcrypt.compare(req.body.senha, user1.senha_user)) {
-                    res.redirect('/');
-                } else {
-                    res.send('Usuário não existe! 1');
-                }
-            } else {
-                res.send('Usuário não existe! 2');
-            }
-        })
-
-        .catch(err=>{
-            res.send('Erro: ' + err);
+// Config
+    // Sessão
+        app.use(session({
+            secret: "eugostodecomeresterco",
+            resave: true,
+            saveUninitialized: true
+        }));
+        app.use(flash());
+    // Middleware
+        app.use((req,res,next) => {
+            res.locals.success_msg = req.flash('success_msg');
+            res.locals.error_msg = req.flash('error_msg');
+            next();
         });
-});
+    // Template Engine
+        app.engine('handlebars', handlebars({
+            defaultLayout: 'main',
+        }));
+        app.set('view engine', 'handlebars');
 
-app.get('/cadastrar', function(req, res) {
-    res.sendFile(__dirname + '/public/pages/cadastrar.html');
-});
+    // Body Parser
+          app.use(bodyParser.urlencoded({ extended: false }));
+          app.use(bodyParser.json());   
 
-app.post('/cadastrar', async (req, res) => {
-    try {
-        user.findOne({
-            where: {
-                email_user: req.body.email
-            }
-        })
+    // Public (Arquivos estáticos)
+        app.use(express.static(path.join(__dirname, "public")))
+// Rotas
 
-            .then(async user1 =>{
-                if (!user1) {
-                    var senha = await bcrypt.hash(req.body.senha, 10);
+        //app.get('/home', application.IsAuthenticated);
+        //app.get('/logout', application.destroySession);
 
-                    user.create({
-                        nome_user: req.body.nome,
-                        email_user: req.body.email,
-                        senha_user: senha
-                    }).then(()=>{
-                        res.redirect('/login');
+        app.get('/', function(req, res) {
+            Post.findAll({order: [['id', 'DESC']]}).then(posts=>{ //DESC: do mais novo ao mais antigo //ASC: o inverso
+                const informations = {
+                    postDocuments: posts.map(document => {
+                      return {
+                        id: document.id,
+                        titulo: document.titulo,
+                        conteudo: document.conteudo,
+                        createdAt: document.createdAt
+                      }
                     })
-                    .catch((err)=>{
-                        res.send('Erro: ' + err + "<br><br>" + "Wait to be redirected!");
-                        setTimeout((err)=>{
-                            res.send(err);
-                        },5000);
-                    });
-                } else {
-                    res.send('Já cadastrado!');
-                    return;
-                }
+                  }
+                
+                res.render('home', {
+                    posts: informations.postDocuments
+                });
+            });
+        });
+
+        app.get('/cad', function(req, res) {
+            res.render('formulario');
+        });
+
+        app.post('/add', function(req, res) {
+            Post.create({
+                titulo: req.body.titulo,
+                conteudo: req.body.conteudo
             })
 
+            .then(() => {
+                res.redirect('/');
+            })
             .catch(err => {
-                res.send(err);
+                res.send('Erro: ' + err);
             });
-    } catch (error) {
-        setTimeout(()=>{
-            res.send('Erro: ' + error + "<br><br>" + "Você será redirecionado para tentar novamente!");
-        }, 3000);
-    }
-    //res.send("E-mail: " + req.body.email + "<br>" + "Senha: " + req.body.senha + "<br>");
-});
+        });
 
-app.listen(port, (err, res) => {
-    if(err) return console.log('ERRO');
-    console.log('server iniciado na porta 8080');
-});
+        app.get('/deletar/:id', function(req, res) {
+            Post.destroy({
+                where: {
+                    'id': req.params.id
+                }
+            })
+            .then(()=>{
+                res.send('Postagem excluída com sucesso!<br><br>' + 
+                '<a href="/"><button>HOME</button></a>');
+                res.redirect('/');
+            })
+            .catch(err=>{
+                res.send(err);
+                res.redirect('/404');
+            });
+        });
+
+        app.get('/404', function(req, res) {
+            res.send('ERROR 404');
+        });
+
+        app.get('/register', (req, res) => {
+            res.render('register');
+        });
+
+        app.post('/register', async (req, res) => {
+            var user = req.body.usuario;
+            var email = req.body.email;
+            var senha = req.body.senha;
+            var senha1 = req.body.csenha;
+
+            var Senha = await bcrypt.hash(senha, 10)
+
+            if(senha === senha1) {
+                User.findOne({
+                    where: {
+                        email: email
+                    }
+                }).then(result => {
+                    if(!result) {
+                        User.create({
+                            usuario: user,
+                            senha: Senha,
+                            email: email
+                        }).then(()=>{
+                            res.redirect('/login');
+                        })
+                    } else {
+                        res.send('email ja esta cadastrado!');
+                    }
+                }).catch(err=>{
+                    res.send(err);
+                })
+            } else {
+                res.send('As senhas não coicidem!');
+                return;
+            }
+        });
+
+        app.get('/login', (req, res) => {
+            res.render('login');
+        });
+
+        app.post('/login', (req, res) => {
+            var email = req.body.email;
+            var senha = req.body.senha;
+
+            User.findOne({
+                where: {
+                    email: email
+                }
+            }).then(result => {
+                if(result && bcrypt.compareSync(senha, result.senha)) {
+                    res.redirect('/');
+                } else {
+                    res.send('Usuário não existe!');
+                }
+            }).catch(err => {
+                res.send('Error: ' + err);
+            })
+        });
+
+app.listen(3000, function() { console.log("Servidor rodando!"); });
